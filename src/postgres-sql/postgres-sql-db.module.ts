@@ -10,7 +10,7 @@ const modules = [
     inject: [ConfigService],
     useFactory: (configService: ConfigService) => ({
       dialect: 'postgres',
-      logging: true,
+      logging: false,
       username: configService.get<string>('POSTGRES_USER'),
       password: configService.get<string>('POSTGRES_PASSWORD'),
       host: configService.get<string>('POSTGRES_HOST'),
