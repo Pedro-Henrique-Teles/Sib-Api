@@ -1,4 +1,3 @@
-// src/members/members.service.ts
 import {
   Injectable,
   NotFoundException,
