@@ -1,4 +1,3 @@
-// src/members/members.module.ts
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { MemberService } from '../member.service';
