@@ -5,7 +5,9 @@ import {
   IsOptional,
   IsDateString,
   IsEnum,
-  Validate,
+  IsEmail,
+  MinLength,
+  Matches,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
@@ -15,9 +17,18 @@ export class CreateMemberDto {
   @Length(1, 120)
   fullName: string;
 
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(8)
+  password: string;
+
   @IsOptional()
   @IsDateString()
-  birthDate?: string; // formato: '1990-05-15'
+  birthDate?: string;
 
   @IsEnum(['M', 'F', 'Other'])
   gender: 'M' | 'F' | 'Other';

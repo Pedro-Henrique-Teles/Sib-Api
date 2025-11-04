@@ -27,6 +27,15 @@ export class Member extends Model {
   @Column(DataType.STRING(120))
   fullName: string;
 
+  @AllowNull(false)
+  @Unique
+  @Column(DataType.STRING(255))
+  email: string;
+
+  @AllowNull(false)
+  @Column(DataType.STRING(255))
+  password: string;
+
   @AllowNull(true)
   @Column(DataType.DATEONLY)
   birthDate: Date | null;
