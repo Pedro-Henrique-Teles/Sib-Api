@@ -14,6 +14,15 @@ module.exports = {
         type: Sequelize.STRING(120),
         allowNull: false,
       },
+      email: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+        unique: true,
+      },
+      password: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+      },
       birthDate: {
         type: Sequelize.DATEONLY,
         allowNull: true,
