@@ -3,11 +3,19 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // remove propriedades não esperadas
+      forbidNonWhitelisted: true, // lança erro se tiver propriedades indevidas
+      transform: true, // transforma automaticamente tipos primitivos
+    }),
+  );
 
   const appName =
     configService.get<string>('MICROSERVICE_NAME') || 'INSERT_SERVICE_NAME';
@@ -39,10 +47,9 @@ async function bootstrap() {
   });
 
   const config = new DocumentBuilder()
-    .setTitle('Microservice Negotiation Panels')
-    .setDescription('Microserviço responsável pelo painel de negociação')
+    .setTitle('Microservice Segunda Igreja Batista API')
+    .setDescription('Microserviço responsável pela Segunda Igreja Batista')
     .setVersion('1.0')
-    .setContact('CallFly', 'https://hml.callfly.com.br', ' Homologação');
 
   // Always add localhost for development
   config.addServer(`http://localhost:${port}`, 'Development');
