@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDto, UpdateUserDto } from 'src/dto/user.dto';
-import { User } from 'src/model/user.model';
 import { Op } from 'sequelize';
+import { User } from 'src/model/user.model';
 
 @Injectable()
 export class UserRepository {
@@ -37,13 +37,9 @@ export class UserRepository {
   ): Promise<User[]> {
     const conditions: Array<Record<string, unknown>> = [];
 
-    const cpf = (filters as unknown as { cpf?: string }).cpf;
-    const email = (filters as unknown as { email?: string }).email;
     const name = (filters as unknown as { name?: string }).name;
     const phone = (filters as unknown as { phone?: string }).phone;
 
-    if (cpf) conditions.push({ cpf: { [Op.iLike]: `%${cpf}%` } });
-    if (email) conditions.push({ email: { [Op.iLike]: `%${email}%` } });
     if (name) conditions.push({ name: { [Op.iLike]: `%${name}%` } });
     if (phone) conditions.push({ phone: { [Op.iLike]: `%${phone}%` } });
 
@@ -58,5 +54,13 @@ export class UserRepository {
 
   async findAll(): Promise<User[]> {
     return this.userModel.findAll();
+  }
+
+  async deleteUser(id: number): Promise<void> {
+    const user = await this.userModel.findByPk(id);
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+    await user.destroy();
   }
 }
