@@ -24,6 +24,7 @@ async function bootstrap() {
   const port = Number(
     configService.get<string>('PORT', process.env.PORT || '3008'),
   );
+  // CORREÇÃO: Lê a variável CORS do .env
   const cors = configService.get<string>('CORS', '*');
   const trustProxy =
     configService.get<string>('TRUST_PROXY', 'false') === 'true';
@@ -35,13 +36,18 @@ async function bootstrap() {
 
   app.enableCors({
     origin: (origin, callback) => {
+      // CORREÇÃO: usa a variável 'cors'
       if (!origin || cors === '*' || cors.split(',').includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error(`Not allowed by CORS from origin ${origin}`));
       }
     },
-    methods: 'GET,POST,PUT,DELETE',
+    // --- CORREÇÃO AQUI ---
+    // Adicionado 'PATCH' (para Editar)
+    // O 'DELETE' está aqui, mas não tem endpoint, então não faz mal
+    methods: 'GET,POST,PUT,DELETE,PATCH',
+    // --- FIM DA CORREÇÃO ---
     allowedHeaders: 'Content-Type,Authorization',
     credentials: true,
   });
@@ -51,14 +57,10 @@ async function bootstrap() {
     .setDescription('Microserviço responsável pela Segunda Igreja Batista')
     .setVersion('1.0')
 
-  // Always add localhost for development
   config.addServer(`http://localhost:${port}`, 'Development');
-
   config.addBearerAuth();
-
   const swaggerConfig = config.build();
 
-  // Only setup Swagger if not in production
   const nodeEnv = configService.get<string>('NODE_ENV');
 
   if (nodeEnv !== 'production') {
@@ -70,5 +72,4 @@ async function bootstrap() {
   await app.listen(port);
   logger.log(`Microservice ${appName} listening on port ${port}`);
 }
-
 void bootstrap();
