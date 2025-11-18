@@ -11,9 +11,9 @@ async function bootstrap() {
 
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // remove propriedades não esperadas
-      forbidNonWhitelisted: true, // lança erro se tiver propriedades indevidas
-      transform: true, // transforma automaticamente tipos primitivos
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
     }),
   );
 
@@ -33,6 +33,7 @@ async function bootstrap() {
     logger.log('Trust proxy habilitado');
   }
 
+  // ✅ CORREÇÃO PRINCIPAL: Adicionar PATCH nos métodos permitidos
   app.enableCors({
     origin: (origin, callback) => {
       if (!origin || cors === '*' || cors.split(',').includes(origin)) {
@@ -41,8 +42,8 @@ async function bootstrap() {
         callback(new Error(`Not allowed by CORS from origin ${origin}`));
       }
     },
-    methods: 'GET,POST,PUT,DELETE',
-    allowedHeaders: 'Content-Type,Authorization',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], // ⚠️ ADICIONADO PATCH E OPTIONS
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   });
 
@@ -51,14 +52,11 @@ async function bootstrap() {
     .setDescription('Microserviço responsável pela Segunda Igreja Batista')
     .setVersion('1.0')
 
-  // Always add localhost for development
   config.addServer(`http://localhost:${port}`, 'Development');
-
   config.addBearerAuth();
 
   const swaggerConfig = config.build();
 
-  // Only setup Swagger if not in production
   const nodeEnv = configService.get<string>('NODE_ENV');
 
   if (nodeEnv !== 'production') {
@@ -69,6 +67,8 @@ async function bootstrap() {
 
   await app.listen(port);
   logger.log(`Microservice ${appName} listening on port ${port}`);
+  logger.log(`CORS habilitado para: ${cors}`);
+  logger.log(`Swagger disponível em: http://localhost:${port}/docs`);
 }
 
 void bootstrap();
