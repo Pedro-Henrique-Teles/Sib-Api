@@ -33,7 +33,6 @@ async function bootstrap() {
     logger.log('Trust proxy habilitado');
   }
 
-  // ✅ CORREÇÃO PRINCIPAL: Adicionar PATCH nos métodos permitidos
   app.enableCors({
     origin: (origin, callback) => {
       if (!origin || cors === '*' || cors.split(',').includes(origin)) {
@@ -42,7 +41,7 @@ async function bootstrap() {
         callback(new Error(`Not allowed by CORS from origin ${origin}`));
       }
     },
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], // ⚠️ ADICIONADO PATCH E OPTIONS
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   });
