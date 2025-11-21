@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -84,6 +85,7 @@ export class UserController {
   async createUser(@Body() dto: CreateUserDto): Promise<ResponseUserDto> {
     return this.userService.createUser(dto);
   }
+
   @Patch('edit/:id')
   @ApiOperation({ summary: 'Editar um usuário existente' })
   @ApiOkResponse({
@@ -102,13 +104,13 @@ export class UserController {
     return this.userService.editUser(Number(id), dto);
   }
 
-  @Patch('delete/:id')
+  @Delete('delete/:id')
   @ApiOperation({ summary: 'Deletar um usuário existente' })
   @ApiOkResponse({
     description: 'Usuário deletado com sucesso',
   })
   @ApiNotFoundResponse({ description: 'Usuário não encontrado' })
-  async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  async deleteUser(@Param('id', ParseIntPipe) id: number) {
     return this.userService.deleteUser(id);
   }
 }

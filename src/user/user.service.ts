@@ -92,7 +92,6 @@ export class UserService {
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...userWithoutPassword } = user.toJSON();
     return userWithoutPassword;
   }
@@ -103,7 +102,6 @@ export class UserService {
     );
 
     return users.map((user) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password: _, ...userWithoutPassword } = user.toJSON();
       return userWithoutPassword;
     });
@@ -113,13 +111,13 @@ export class UserService {
     const users = await this.userRepository.findAll();
 
     return users.map((user) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password: _, ...userWithoutPassword } = user.toJSON();
       return userWithoutPassword;
     });
   }
 
-  async deleteUser(id: number): Promise<void> {
+  async deleteUser(id: number): Promise<{ message: string }> {
     await this.userRepository.deleteUser(id);
+    return { message: 'Usuário desativado com sucesso' };
   }
 }
