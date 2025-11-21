@@ -118,4 +118,8 @@ export class UserService {
       return userWithoutPassword;
     });
   }
+
+  async deleteUser(id: number): Promise<void> {
+    await this.userRepository.deleteUser(id);
+  }
 }

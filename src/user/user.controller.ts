@@ -101,4 +101,14 @@ export class UserController {
   ): Promise<ResponseUserDto> {
     return this.userService.editUser(Number(id), dto);
   }
+
+  @Patch('delete/:id')
+  @ApiOperation({ summary: 'Deletar um usuário existente' })
+  @ApiOkResponse({
+    description: 'Usuário deletado com sucesso',
+  })
+  @ApiNotFoundResponse({ description: 'Usuário não encontrado' })
+  async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.userService.deleteUser(id);
+  }
 }

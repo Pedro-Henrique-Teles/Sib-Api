@@ -57,6 +57,14 @@ export class UserRepository {
   }
 
   async findAll(): Promise<User[]> {
-    return this.userModel.findAll();
+    return this.userModel.findAll({ where: { is_active: true } });
+  }
+
+  async deleteUser(id: number): Promise<void> {
+    const user = await this.userModel.findByPk(id);
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+    await user.update({ is_active: false });
   }
 }
