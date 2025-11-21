@@ -53,7 +53,7 @@ export class UserRepository {
       );
     }
 
-    return this.userModel.findAll({ where: { [Op.and]: conditions } });
+    return this.userModel.findAll({ where: { [Op.and]: conditions, is_active: true } });
   }
 
   async findAll(): Promise<User[]> {
